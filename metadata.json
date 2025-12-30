@@ -1,0 +1,7 @@
+{
+  "name": "DCA Pro Local",
+  "description": "Profesyonel DCA ticaret yönetim paneli (Yerel Simülasyon Modu).",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
