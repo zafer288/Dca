@@ -14,8 +14,7 @@ type SignalType = 'ENTRY' | 'EXIT';
 
 const WebhookInfoModal: React.FC<WebhookInfoModalProps> = ({ isOpen, onClose, bot }) => {
   const [passphrase, setPassphrase] = useState('');
-  // Local modda URL simülasyon amaçlıdır
-  const webhookUrl = "http://localhost:3000/api/webhook"; 
+  const [webhookUrl, setWebhookUrl] = useState("http://localhost:8080/webhook"); 
   const [copied, setCopied] = useState<string | null>(null);
   
   const [mainTab, setMainTab] = useState<TabType>('JSON');
@@ -26,6 +25,9 @@ const WebhookInfoModal: React.FC<WebhookInfoModalProps> = ({ isOpen, onClose, bo
       api.getConfig().then(config => {
         if (config) {
           setPassphrase(config.webhookPassphrase || 'binance_secure');
+          if (config.webhookUrl) {
+            setWebhookUrl(config.webhookUrl);
+          }
         }
       }).catch(e => console.error("Config load error", e));
       setMainTab('JSON');
@@ -80,7 +82,7 @@ if (sell_condition)
           <div>
             <h2 className="text-white font-bold text-lg flex items-center gap-2 uppercase tracking-tighter">
               <Zap size={20} className="text-amber-500 fill-amber-500" />
-              TradingView Entegrasyon (Simülasyon)
+              TradingView Entegrasyon
             </h2>
             <p className="text-zinc-500 text-[10px] font-mono mt-1 uppercase">
               Birim: <span className="text-indigo-400 font-bold">{bot.symbol}</span> | ID: <span className="text-white">{bot.bot_id}</span>
@@ -99,7 +101,7 @@ if (sell_condition)
                  <div>
                    <h4 className="text-white text-[11px] font-bold uppercase mb-2">Kurulum Bilgisi</h4>
                    <p className="text-[10px] text-zinc-400 leading-relaxed">
-                     Şu anda <b>Yerel Simülasyon Modu</b>ndasınız. Aşağıdaki URL ve JSON verileri, botun gerçek bir sunucuda nasıl çalışacağını test etmeniz için oluşturulmuştur. Gerçek TradingView alarmları için bu projeyi bir sunucuya (VPS/Cloud) yüklemeniz gerekir.
+                     Aşağıdaki Webhook URL'sini TradingView alarm ayarlarınızdaki "Webhook URL" kısmına yapıştırın. Mesaj kutusundaki JSON verisini ise "Message" kutusuna kopyalayın.
                    </p>
                  </div>
              </div>
@@ -109,10 +111,10 @@ if (sell_condition)
           <div className="space-y-3">
             <label className="block text-white text-[10px] uppercase font-bold flex items-center gap-2">
               <span className="w-5 h-5 bg-white text-black flex items-center justify-center rounded-full text-[9px]">1</span>
-              Webhook URL (Örnek)
+              Webhook URL (Hedef Adres)
             </label>
             <div className="bg-black border border-white/10 rounded-sm p-4 flex items-center justify-between group transition-colors">
-              <code className="font-mono text-sm text-zinc-500 break-all">
+              <code className="font-mono text-sm text-emerald-400 break-all">
                 {webhookUrl}
               </code>
               <button 
@@ -122,6 +124,7 @@ if (sell_condition)
                 {copied === 'url' ? <Check size={16} className="text-emerald-500"/> : <Copy size={16} />}
               </button>
             </div>
+            <p className="text-[9px] text-zinc-600 italic">* Bu adresi sağ üstteki Ayarlar menüsünden değiştirebilirsiniz.</p>
           </div>
 
           {/* 2. ADIM: MESSAGE */}
@@ -129,7 +132,7 @@ if (sell_condition)
             <div className="flex items-center justify-between">
                <label className="block text-white text-[10px] uppercase font-bold flex items-center gap-2">
                  <span className="w-5 h-5 bg-white text-black flex items-center justify-center rounded-full text-[9px]">2</span>
-                 Mesaj Kutusu
+                 Mesaj İçeriği
                </label>
 
                <div className="flex bg-black rounded-sm border border-white/10 p-0.5">

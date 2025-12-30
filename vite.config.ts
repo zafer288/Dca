@@ -4,7 +4,9 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   define: {
-    'process.env': {}
+    // Docker ortamında enjekte edilen window.env değişkenini process.env gibi gösteriyoruz.
+    // Bu sayede kod içinde process.env.API_KEY kullanımı bozulmadan çalışır.
+    'process.env': 'window.env || {}'
   },
   build: {
     outDir: 'dist',
